@@ -1,0 +1,14 @@
+[
+	{
+		"name": "kode",
+		"url": "https://github.com/Kode/?.git"
+	},
+	{
+		"name": "kha-samples",
+		"url": "https://github.com/Kha-Samples/?.git"
+	},
+	{
+		"name": "kore-samples",
+		"url": "https://github.com/Kore-Samples/?.git"
+	}
+]
