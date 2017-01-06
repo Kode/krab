@@ -44,8 +44,9 @@ function git(params, cwd = '.', check = true) {
 	return status;
 }
 
-function git_clone(url, dir, branch = 'master') {
-	return git(['clone', url, dir]);
+function git_clone(url, dir, branch = 'master', depth = 0) {
+	if (depth) return git(['clone', url, dir, '--depth', depth]);
+	else return git(['clone', url, dir]);
 }
 
 function git_exists(url) {
@@ -87,7 +88,11 @@ function clone(name, dir, branch = 'master') {
 	const url = findBestUrl(name);
 
 	console.log('Downloading ' + name + ' from ' + url + '.');
-	git_clone(url, dir, branch);
+	let depth = 0;
+	if (name.endsWith('_bin')) {
+		depth = 3;
+	}
+	git_clone(url, dir, branch, depth);
 	git_checkout(branch, dir);
 	addRemotes(name, dir);
 
