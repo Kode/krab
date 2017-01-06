@@ -57,11 +57,12 @@ function git_checkout(branch, dir) {
 	git(['checkout', branch], dir);
 }
 
-function findBestUrl(name) {
+function findBestUrl(name, fallback) {
 	for (let host of hosts) {
 		const url = host.url.replace(/\?/g, name);
 		if (git_exists(url)) return url;
 	}
+	return fallback;
 }
 
 function findName(url) {
@@ -84,8 +85,8 @@ function addRemotes(name, dir) {
 	}
 }
 
-function clone(name, dir, branch = 'master') {
-	const url = findBestUrl(name);
+function clone(name, dir, branch = 'master', fallback) {
+	const url = findBestUrl(name, fallback);
 
 	console.log('Downloading ' + name + ' from ' + url + '.');
 	let depth = 0;
@@ -98,10 +99,10 @@ function clone(name, dir, branch = 'master') {
 
 	const repos = findSubmodules(dir);
 	for (let repo of repos) {
-		clone(findName(repo.url), path.join(dir, repo.path), repo.branch);
+		clone(findName(repo.url), path.join(dir, repo.path), repo.branch, repo.url);
 	}
 }
 
-const repository = process.argv[2];
+const name = process.argv[2];
 
-clone(repository, repository);
+clone(name, name);
