@@ -57,6 +57,10 @@ function git_checkout(branch, dir) {
 	git(['checkout', branch], dir);
 }
 
+function git_pull(dir, branch) {
+	git(['pull', 'origin', branch], dir);
+}
+
 function findBestUrl(name, fallback) {
 	for (let host of hosts) {
 		const url = host.url.replace(/\?/g, name);
@@ -103,6 +107,20 @@ function clone(name, dir, branch = 'master', fallback) {
 	}
 }
 
+function update(dir, branch = 'master') {
+	console.log('Updating ' + dir + '.');
+	git_pull(dir, branch);
+	const repos = findSubmodules(dir);
+	for (let repo of repos) {
+		update(path.join(dir, repo.path), repo.branch);
+	}
+}
+
 const name = process.argv[2];
 
-clone(name, name);
+if (fs.existsSync(name)) {
+	update(name);
+}
+else {
+	clone(name, name);
+}
