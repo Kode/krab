@@ -118,7 +118,10 @@ function update(dir, branch = 'master') {
 
 console.log('krab v1.0');
 
-const name = process.argv[2];
+let name = process.argv[2];
+name = name.trim();
+if (name.startsWith('/')) name = name.substring(1);
+if (name.endsWith('/')) name = name.substring(0, name.length - 1);
 
 if (fs.existsSync(name)) {
 	update(name);
