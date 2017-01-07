@@ -116,6 +116,8 @@ function update(dir, branch = 'master') {
 	}
 }
 
+console.log('krab v1.0');
+
 const name = process.argv[2];
 
 if (fs.existsSync(name)) {
