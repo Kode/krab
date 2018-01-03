@@ -116,12 +116,12 @@ function update(dir, branch = 'master') {
 	}
 }
 
-console.log('krab v1.0');
+console.log('krab v1.0.1');
 
 let name = process.argv[2];
 name = name.trim();
-if (name.startsWith('/')) name = name.substring(1);
-if (name.endsWith('/')) name = name.substring(0, name.length - 1);
+while (name.startsWith('/') || name.startsWith('\\') || name.startsWith('.')) name = name.substring(1);
+while (name.endsWith('/') || name.endsWith('\\')) name = name.substring(0, name.length - 1);
 
 if (fs.existsSync(name)) {
 	update(name);
