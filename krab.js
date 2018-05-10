@@ -92,6 +92,11 @@ function addRemotes(name, dir) {
 function clone(name, dir, branch = 'master', fallback) {
 	const url = findBestUrl(name, fallback);
 
+	if (!url) {
+		console.log('Could not find ' + name + '.');
+		return;
+	}
+
 	console.log('Downloading ' + name + ' from ' + url + '.');
 	let depth = 0;
 	if (name.endsWith('_bin')) {
@@ -116,7 +121,7 @@ function update(dir, branch = 'master') {
 	}
 }
 
-console.log('krab v1.0.1');
+console.log('krab v1.0.2');
 
 let name = process.argv[2];
 name = name.trim();
