@@ -28,7 +28,9 @@ function findSubmodules(dir) {
 			}
 		}
 	}
-	repos.push(repo);
+	if (repo !== null) {
+		repos.push(repo);
+	}
 	return repos;
 }
 
@@ -121,7 +123,7 @@ function update(dir, branch = 'master') {
 	}
 }
 
-console.log('krab v1.0.2');
+console.log('krab v1.0.3');
 
 let name = process.argv[2];
 name = name.trim();
