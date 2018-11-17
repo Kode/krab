@@ -91,7 +91,7 @@ function addRemotes(name, dir) {
 	}
 }
 
-function clone(name, dir, branch = 'master', fallback) {
+function clone(name, dir, branch, fallback) {
 	const url = findBestUrl(name, fallback);
 
 	if (!url) {
@@ -114,7 +114,7 @@ function clone(name, dir, branch = 'master', fallback) {
 	}
 }
 
-function update(dir, branch = 'master') {
+function update(dir, branch) {
 	console.log('Updating ' + dir + '.');
 	git_pull(dir, branch);
 	const repos = findSubmodules(dir);
@@ -123,16 +123,26 @@ function update(dir, branch = 'master') {
 	}
 }
 
-console.log('krab v1.0.3');
+console.log('krab v1.0.4');
 
 let name = process.argv[2];
 name = name.trim();
 while (name.startsWith('/') || name.startsWith('\\') || name.startsWith('.')) name = name.substring(1);
 while (name.endsWith('/') || name.endsWith('\\')) name = name.substring(0, name.length - 1);
 
-if (fs.existsSync(name)) {
-	update(name);
+let branch = 'master';
+if (process.argv[3]) {
+	branch = process.argv[3];
+}
+
+let dir = name;
+if (branch !== 'master') {
+	dir = name + '-' + branch;
+}
+
+if (fs.existsSync(dir)) {
+	update(dir, branch);
 }
 else {
-	clone(name, name);
+	clone(name, dir, branch);
 }
