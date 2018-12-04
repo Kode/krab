@@ -15,6 +15,7 @@ function findSubmodules(dir) {
 	for (let line of lines) {
 		if (line.startsWith('[')) {
 			if (repo !== null) {
+				repo.branch = repo.branch || 'master';
 				repos.push(repo);
 			}
 			repo = {};
@@ -29,6 +30,7 @@ function findSubmodules(dir) {
 		}
 	}
 	if (repo !== null) {
+		repo.branch = repo.branch || 'master';
 		repos.push(repo);
 	}
 	return repos;
@@ -123,7 +125,7 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.0.4');
+console.log('krab v1.0.5');
 
 let name = process.argv[2];
 name = name.trim();
