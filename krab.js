@@ -49,16 +49,12 @@ function git(params, cwd = '.', check = true) {
 }
 
 function git_clone(url, dir, branch = 'master', depth = 0) {
-	if (depth) return git(['clone', url, dir, '--depth', depth]);
-	else return git(['clone', url, dir]);
+	if (depth) return git(['clone', url, dir, '-b', branch, '--depth', depth]);
+	else return git(['clone', url, dir, '-b', branch]);
 }
 
 function git_exists(url) {
 	return git(['ls-remote', '-h', url], '.', false) === 0;
-}
-
-function git_checkout(branch, dir) {
-	git(['checkout', branch], dir);
 }
 
 function git_pull(dir, branch) {
@@ -107,7 +103,6 @@ function clone(name, dir, branch, fallback) {
 		depth = 3;
 	}
 	git_clone(url, dir, branch, depth);
-	git_checkout(branch, dir);
 	addRemotes(name, dir);
 
 	const repos = findSubmodules(dir);
@@ -125,7 +120,7 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.0.5');
+console.log('krab v1.0.6');
 
 let name = process.argv[2];
 name = name.trim();
