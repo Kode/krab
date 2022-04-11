@@ -8,6 +8,10 @@
 		"url": "git@github.com:Kha-Samples/?.git"
 	},
 	{
+		"name": "kinc-samples",
+		"url": "git@github.com:Kinc-Samples/?.git"
+	},
+	{
 		"name": "kore-samples",
 		"url": "git@github.com:Kore-Samples/?.git"
 	}

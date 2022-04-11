@@ -4,6 +4,8 @@ const path = require('path');
 
 const hosts = JSON.parse(fs.readFileSync('hosts.json', 'utf8'));
 
+const defaultBranch = 'main';
+
 function findSubmodules(dir) {
 	let repos = [];
 	let repo = null;
@@ -15,7 +17,7 @@ function findSubmodules(dir) {
 	for (let line of lines) {
 		if (line.startsWith('[')) {
 			if (repo !== null) {
-				repo.branch = repo.branch || 'master';
+				repo.branch = repo.branch || defaultBranch;
 				repos.push(repo);
 			}
 			repo = {};
@@ -30,7 +32,7 @@ function findSubmodules(dir) {
 		}
 	}
 	if (repo !== null) {
-		repo.branch = repo.branch || 'master';
+		repo.branch = repo.branch || defaultBranch;
 		repos.push(repo);
 	}
 	return repos;
@@ -120,20 +122,20 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.0.6');
+console.log('krab v1.0.7');
 
 let name = process.argv[2];
 name = name.trim();
 while (name.startsWith('/') || name.startsWith('\\') || name.startsWith('.')) name = name.substring(1);
 while (name.endsWith('/') || name.endsWith('\\')) name = name.substring(0, name.length - 1);
 
-let branch = 'master';
+let branch = defaultBranch;
 if (process.argv[3]) {
 	branch = process.argv[3];
 }
 
 let dir = name;
-if (branch !== 'master') {
+if (branch !== defaultBranch) {
 	dir = name + '-' + branch;
 }
 
