@@ -1,10 +1,27 @@
 const child_process = require('child_process');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const hosts = JSON.parse(fs.readFileSync('hosts.json', 'utf8'));
 
 const defaultBranch = 'main';
+
+let nodlc = false;
+
+function findDlc(dir) {
+	if (nodlc) {
+		return null;
+	}
+
+	const filepath = os.platform() === 'win32' ? path.join(dir, 'get_dlc_dangerously.bat') : path.join(dir, 'get_dlc_dangerously');
+	if (fs.existsSync(filepath)) {
+		return filepath;
+	}
+	else {
+		return null;
+	}
+}
 
 function findSubmodules(dir) {
 	let repos = [];
@@ -107,32 +124,72 @@ function clone(name, dir, branch, fallback) {
 	git_clone(url, dir, branch, depth);
 	addRemotes(name, dir);
 
-	const repos = findSubmodules(dir);
-	for (let repo of repos) {
-		clone(findName(repo.url), path.join(dir, repo.path), repo.branch, repo.url);
+	const dlc = findDlc(dir);
+	if (dlc) {
+		const status = child_process.spawnSync(dlc, [], {encoding: 'utf8'}).status;
+		if (status !== 0) {
+			console.log('dlc download failed.');
+		}
+	}
+	else {
+		const repos = findSubmodules(dir);
+		for (let repo of repos) {
+			clone(findName(repo.url), path.join(dir, repo.path), repo.branch, repo.url);
+		}
 	}
 }
 
 function update(dir, branch) {
 	console.log('Updating ' + dir + '.');
 	git_pull(dir, branch);
-	const repos = findSubmodules(dir);
-	for (let repo of repos) {
-		update(path.join(dir, repo.path), repo.branch);
+
+	const dlc = findDlc(dir);
+	if (dlc) {
+		const status = child_process.spawnSync(dlc, [], {encoding: 'utf8'}).status;
+		if (status !== 0) {
+			console.log('dlc download failed.');
+		}
+	}
+	else {
+		const repos = findSubmodules(dir);
+		for (let repo of repos) {
+			update(path.join(dir, repo.path), repo.branch);
+		}
 	}
 }
 
-console.log('krab v1.0.7');
+console.log('krab v1.0.8');
 
-let name = process.argv[2];
+let name = null;
+let branch = defaultBranch;
+
+for (let i = 2; ; ++i) {
+	if (!process.argv[i]) {
+		break;
+	}
+
+	if (process.argv[i].substring(0, 2) === '--') {
+		if (process.argv[i] === '--nodlc') {
+			nodlc = true;
+		}
+	}
+	else {
+		if (!name) {
+			name = process.argv[i];
+		}
+		else if (!branch) {
+			branch = process.argv[i];
+		}
+	}
+}
+
+if (!name) {
+	throw 'No name found';
+}
+
 name = name.trim();
 while (name.startsWith('/') || name.startsWith('\\') || name.startsWith('.')) name = name.substring(1);
 while (name.endsWith('/') || name.endsWith('\\')) name = name.substring(0, name.length - 1);
-
-let branch = defaultBranch;
-if (process.argv[3]) {
-	branch = process.argv[3];
-}
 
 let dir = name;
 if (branch !== defaultBranch) {
