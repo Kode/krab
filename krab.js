@@ -145,9 +145,14 @@ function update(dir, branch) {
 
 	const dlc = findDlc(dir);
 	if (dlc) {
-		const status = child_process.spawnSync(dlc, [], {encoding: 'utf8'}).status;
-		if (status !== 0) {
-			console.log('dlc download failed.');
+		const proc = child_process.spawnSync(dlc, [], {encoding: 'utf8'});
+		if (proc.status === null) {
+			if (proc.signal !== null) {
+				console.log('dlc download failed: ' + proc.signal);
+			}
+		}
+		else if (status !== 0) {
+			console.log('dlc download failed: ' + status);
 		}
 	}
 	else {
@@ -158,7 +163,7 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.0.8');
+console.log('krab v1.0.9');
 
 let name = null;
 let branch = defaultBranch;
