@@ -132,7 +132,7 @@ function clone(name, dir, branch, fallback) {
 				console.log('dlc download failed: ' + proc.signal);
 			}
 		}
-		else if (status !== 0) {
+		else if (proc.status !== 0) {
 			console.log('dlc download failed: ' + status);
 		}
 	}
@@ -156,7 +156,7 @@ function update(dir, branch) {
 				console.log('dlc download failed: ' + proc.signal);
 			}
 		}
-		else if (status !== 0) {
+		else if (proc.status !== 0) {
 			console.log('dlc download failed: ' + status);
 		}
 	}
@@ -168,7 +168,7 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.1.0');
+console.log('krab v1.1.1');
 
 let name = null;
 let branch = defaultBranch;
