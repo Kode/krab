@@ -126,11 +126,12 @@ function clone(name, dir, branch, fallback) {
 
 	const dlc = findDlc(dir);
 	if (dlc) {
-		const proc = child_process.spawnSync(dlc, [], {encoding: 'utf8'});
-		if (proc.status === null) {
-			if (proc.signal !== null) {
-				console.log('dlc download failed: ' + proc.signal);
-			}
+		const proc = child_process.spawnSync(dlc, [], {encoding: 'utf8', shell: true});
+		if (proc.error) {
+			console.log(proc.error);
+		}
+		else if (proc.status === null) {
+			console.log('dlc download failed: ' + proc.signal);
 		}
 		else if (proc.status !== 0) {
 			console.log('dlc download failed: ' + status);
@@ -150,11 +151,12 @@ function update(dir, branch) {
 
 	const dlc = findDlc(dir);
 	if (dlc) {
-		const proc = child_process.spawnSync(dlc, [], {encoding: 'utf8'});
-		if (proc.status === null) {
-			if (proc.signal !== null) {
-				console.log('dlc download failed: ' + proc.signal);
-			}
+		const proc = child_process.spawnSync(dlc, [], {encoding: 'utf8', shell: true});
+		if (proc.error) {
+			console.log(proc.error);
+		}
+		else if (proc.status === null) {
+			console.log('dlc download failed: ' + proc.signal);
 		}
 		else if (proc.status !== 0) {
 			console.log('dlc download failed: ' + status);
@@ -168,7 +170,7 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.1.1');
+console.log('krab v1.1.2');
 
 let name = null;
 let branch = defaultBranch;
