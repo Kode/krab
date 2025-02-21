@@ -170,10 +170,10 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.1.2');
+console.log('krab v1.1.3');
 
 let name = null;
-let branch = defaultBranch;
+let branch = null;
 
 for (let i = 2; ; ++i) {
 	if (!process.argv[i]) {
@@ -197,6 +197,10 @@ for (let i = 2; ; ++i) {
 
 if (!name) {
 	throw 'No name found';
+}
+
+if (!branch) {
+	branch = defaultBranch;
 }
 
 name = name.trim();
