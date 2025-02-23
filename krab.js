@@ -67,7 +67,7 @@ function git(params, cwd = '.', check = true) {
 	return status;
 }
 
-function git_clone(url, dir, branch = 'master', depth = 0) {
+function git_clone(url, dir, branch = defaultBranch, depth = 0) {
 	if (depth) return git(['clone', url, dir, '-b', branch, '--depth', depth]);
 	else return git(['clone', url, dir, '-b', branch]);
 }
@@ -76,8 +76,8 @@ function git_exists(url) {
 	return git(['ls-remote', '-h', url], '.', false) === 0;
 }
 
-function git_pull(dir, branch) {
-	git(['pull', 'origin', branch], dir);
+function git_pull(dir) {
+	git(['pull'], dir);
 }
 
 function findBestUrl(name, fallback) {
@@ -147,7 +147,7 @@ function clone(name, dir, branch, fallback) {
 
 function update(dir, branch) {
 	console.log('Updating ' + dir + '.');
-	git_pull(dir, branch);
+	git_pull(dir);
 
 	const dlc = findDlc(dir);
 	if (dlc) {
@@ -159,7 +159,7 @@ function update(dir, branch) {
 			console.log('dlc download failed: ' + proc.signal);
 		}
 		else if (proc.status !== 0) {
-			console.log('dlc download failed: ' + status);
+			console.log('dlc download failed: ' + proc.status);
 		}
 	}
 	else {
@@ -170,7 +170,7 @@ function update(dir, branch) {
 	}
 }
 
-console.log('krab v1.1.3');
+console.log('krab v1.1.4');
 
 let name = null;
 let branch = null;
